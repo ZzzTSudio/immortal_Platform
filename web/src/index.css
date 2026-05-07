@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 6.7%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 11.8%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 11.8%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 38 35% 81%;
+    --primary-foreground: 0 0% 6.7%;
+    --secondary: 0 0% 16.5%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 16.5%;
+    --muted-foreground: 0 0% 54.5%;
+    --accent: 38 35% 81%;
+    --accent-foreground: 0 0% 6.7%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 100% / 0.08;
+    --input: 0 0% 16.5%;
+    --ring: 38 35% 81%;
+    --radius: 4px;
+    --sidebar-background: 0 0% 11.8%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 38 35% 81%;
+    --sidebar-primary-foreground: 0 0% 6.7%;
+    --sidebar-accent: 0 0% 16.5%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 0 0% 100% / 0.08;
+    --sidebar-ring: 38 35% 81%;
+  }
+
+  body {
+    @apply bg-[#111111] text-white;
+    font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+    overflow: hidden;
+  }
+
+  * {
+    @apply border-[rgba(255,255,255,0.08)];
+  }
+
+  /* Hide any pseudo-elements on images */
+  img::before,
+  img::after {
+    display: none !important;
+  }
+
+  /* Scrollbar hiding */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer components {
+  .font-serif-cn {
+    font-family: 'Noto Serif SC', 'PingFang SC', 'Microsoft YaHei', serif;
+  }
+
+  .font-mono-code {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+
+  .gold-glow {
+    box-shadow: 0 0 20px rgba(232, 213, 181, 0.15), 0 0 60px rgba(232, 213, 181, 0.05);
+  }
+
+  .gold-text-glow {
+    text-shadow: 0 0 12px rgba(232, 213, 181, 0.4);
+  }
+
+  .panel-surface {
+    background: rgba(30, 30, 30, 0.92);
+    backdrop-filter: blur(12px);
+  }
+
+  .message-enter {
+    animation: messageUnfurl 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  }
+
+  .cursor-blink {
+    animation: cursorBlink 1.2s step-end infinite;
+  }
+
+  .typing-dot {
+    animation: typingBounce 1.4s ease-in-out infinite;
+  }
+  .typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+}
+
+@keyframes messageUnfurl {
+  0% {
+    opacity: 0;
+    transform: perspective(1000px) rotateX(-30deg) scaleY(0.8);
+    transform-origin: top center;
+  }
+  70% {
+    opacity: 1;
+    transform: perspective(1000px) rotateX(0deg) scaleY(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(1000px) rotateX(0deg) scaleY(1);
+  }
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes typingBounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-4px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes lightStream {
+  0% { offset-distance: 0%; }
+  100% { offset-distance: 100%; }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

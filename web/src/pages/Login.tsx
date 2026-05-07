@@ -1,0 +1,158 @@
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Mail, Lock, AlertCircle, CheckCircle } from 'lucide-react';
+import * as api from '@/lib/api';
+
+interface LoginProps {
+  onLoginSuccess: (user: any) => void;
+}
+
+export default function Login({ onLoginSuccess }: LoginProps) {
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSuccess('');
+    setError('');
+    setLoading(true);
+
+    try {
+      if (isLogin) {
+        const res = await api.login(email, password);
+        if (res.success) {
+          onLoginSuccess(res.user);
+        }
+      } else {
+        const res = await api.register(email, password);
+        if (res.success) {
+          setIsLogin(true);
+          setEmail('');
+          setPassword('');
+          setSuccess('注册成功，请登录');
+        }
+      }
+    } catch (err: any) {
+      setError(err.message || '操作失败');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-[#0A0A0A] relative overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#E8D5B5] rounded-full filter blur-[120px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#E8D5B5] rounded-full filter blur-[120px]" />
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="relative z-10 w-full max-w-md px-6"
+      >
+        <div className="bg-[#1E1E1E] border border-[rgba(255,255,255,0.08)] rounded-lg p-8">
+          {/* Logo */}
+          <div className="flex flex-col items-center mb-8">
+            <img src="/logo.png" alt="Immortal" className="w-16 h-16 mb-4" />
+            <h1 className="text-[24px] font-medium text-[#E8D5B5] font-serif-cn tracking-wide">
+              IMMORTAL
+            </h1>
+            <p className="text-[13px] text-[#8B8B8B] mt-2">
+              {isLogin ? '登录您的账户' : '创建新账户'}
+            </p>
+          </div>
+
+          {/* Error Message */}
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-4 p-3 bg-[rgba(239,68,68,0.1)] border border-[rgba(239,68,68,0.3)] rounded flex items-center gap-2"
+            >
+              <AlertCircle size={16} className="text-red-400" />
+              <span className="text-[13px] text-red-400">{error}</span>
+            </motion.div>
+          )}
+
+          {/* Success Message */}
+          {success && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-4 p-3 bg-[rgba(34,197,94,0.1)] border border-[rgba(34,197,94,0.3)] rounded flex items-center gap-2"
+            >
+              <CheckCircle size={16} className="text-green-400" />
+              <span className="text-[13px] text-green-400">{success}</span>
+            </motion.div>
+          )}
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-[13px] text-[#8B8B8B] mb-2">邮箱</label>
+              <div className="relative">
+                <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#4D4D4D]" />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder={isLogin ? "输入邮箱" : "输入 @fanvil.com 邮箱"}
+                  required
+                  className="w-full pl-10 pr-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded text-[14px] text-white placeholder-[#4D4D4D] focus:border-[#E8D5B5]/40 focus:outline-none transition-colors"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-[13px] text-[#8B8B8B] mb-2">密码</label>
+              <div className="relative">
+                <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#4D4D4D]" />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder={isLogin ? "输入密码" : "至少6位，包含英文和数字"}
+                  required
+                  className="w-full pl-10 pr-4 py-3 bg-[#111111] border border-[rgba(255,255,255,0.08)] rounded text-[14px] text-white placeholder-[#4D4D4D] focus:border-[#E8D5B5]/40 focus:outline-none transition-colors"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3 bg-[#E8D5B5] text-[#111111] rounded text-[14px] font-medium hover:bg-[#d9c9a8] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? '处理中...' : isLogin ? '登录' : '注册'}
+            </button>
+          </form>
+
+          {/* Toggle */}
+          <div className="mt-6 text-center">
+            <button
+              onClick={() => {
+                setIsLogin(!isLogin);
+                setError('');
+                setSuccess('');
+              }}
+              className="text-[13px] text-[#8B8B8B] hover:text-[#E8D5B5] transition-colors"
+            >
+              {isLogin ? '没有账户？立即注册' : '已有账户？返回登录'}
+            </button>
+          </div>
+        </div>
+
+        <p className="text-center text-[11px] text-[#4D4D4D] mt-6">
+          IMMORTAL © 2025 - 智能数字人对话系统
+        </p>
+      </motion.div>
+    </div>
+  );
+}

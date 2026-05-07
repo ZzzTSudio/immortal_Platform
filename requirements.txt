@@ -1,0 +1,17 @@
+fastapi
+python-multipart
+uvicorn
+pydantic
+pydantic-settings
+httpx
+openai
+qdrant-client
+cachetools
+rank-bm25
+beautifulsoup4
+readability-lxml
+pypdf
+python-docx
+pytest
+pytest-asyncio
+
